@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <title>Serenity</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden; /* Prevent scrolling */
+        background: radial-gradient(circle, #6a5acd, #00008b);
+    }
+
+
+      .container {
+        width: 100%;
+        height: 100%;
+        max-height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 20px;
+        position: relative;
+        background: radial-gradient(
+          circle,
+          #C9C2FF,
+          #6857FF
+        );
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 20px;
+        position: relative;
+      }
+
+      .logo {
+        width: 150px;
+        position: absolute;
+        top: 10%;
+        left: 20%;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Circle default style */
+    .circle {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(to bottom, #F8FDFF, #95C3FF);
+        border-radius: 50%;
+        position: absolute;
+        top: 20%;
+        left: 10%;
+        box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.8);
+        transition: all 0.5s ease-in-out;
+    }
+
+    @keyframes think {
+        100% {transform: translate(calc(40vw - 50%), calc(35vh - 50%)) rotate(360deg);}
+    }
+
+    @keyframes active {
+        100% {transform: translate(calc(40vw - 50%), calc(35vh - 50%)) scale(1.5);}
+    }
+
+    .circle.active {
+        animation: active 0.8s ease-in;
+    }
+/* Beep effect */
+    @keyframes beep {
+        0%, 100% { transform: translate(calc(40vw - 50%), calc(35vh - 50%)) scale(2)}
+    }
+
+    circle.beep {
+        animation: beep 0.3s ease-in-out;
+    }
+
+    /* Rotate animation */
+    @keyframes rotate {
+        0% { transform: translate(calc(40vw - 50%), calc(35vh - 50%)) scale(1.5) rotate(0deg); }
+        50% { transform: translate(calc(40vw - 50%), calc(35vh - 50%)) scale(2) rotate(180deg); }
+        100% { transform: translate(calc(40vw - 50%), calc(35vh - 50%)) scale(1.5) rotate(360deg); }
+    }
+
+    .circle.rotating {
+        animation: rotate 5s linear infinite;
+    }
+
+
+    .text {
+      position: absolute;
+      bottom: 160px;
+      font-size: 20px;
+      color: white;
+      font-family: 'Jua', sans-serif;
+    }
+
+      .bars {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 6px;
+        position: absolute;
+        bottom: 80px;
+      }
+      .bar {
+        width: 10px;
+        height: 20px;
+        background: linear-gradient(to bottom, #C1EDFF, #749EB0);
+        border-radius: 4px;
+        animation: pulse 1s infinite ease-in-out;
+        transform-origin: center;
+      }
+
+
+      .bar:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .bar:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .bar:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+      .bar:nth-child(4) {
+        animation-delay: 0.6s;
+      }
+
+      @keyframes pulse {
+        0%, 100% {
+            transform: scaleY(1);
+        }
+        50% {
+            transform: scaleY(2); /* Scale from the center */
+        }
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="circle"></div>
+      <img class="logo" src="serenity.png" alt="Serenity Logo" />
+      <div class="text">Listening...</div>
+      <div class="bars">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+    </div>
+  </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const circle = document.querySelector(".circle");
+
+      // Move to center and grow
+      setTimeout(() => {
+          circle.classList.add("active");
+
+          // Short beep effect after moving
+          setTimeout(() => {
+              circle.classList.add("beep");
+
+              // Remove beep and start rotating
+              setTimeout(() => {
+                  circle.classList.remove("beep");
+                  circle.classList.add("rotating");
+              }, 300); // Beep lasts 300ms
+
+          }, 500); // Wait 500ms before beep
+
+      }, 1000); // Simulate delay before AI responds
+
+      // Make a request to the Flask server
+      fetch('/api/speech-to-text', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.response);
+        document.querySelector('.text').innerText = data.response;
+      })
+      .catch(error => console.error('Error:', error));
+    });
+  </script>
+</html>

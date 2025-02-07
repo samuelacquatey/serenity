@@ -1,0 +1,19 @@
+{
+    "user": {
+      "id": 1,
+      "first-name": "John",
+        "last-name": "Doe",
+      "email": "john.doe@example.com",
+      "age": 30,
+      "address": {
+        "street": "123 Main St",
+        "city": "Anytown",
+        "state": "Anystate",
+        "zip": "12345"
+      },
+      "phone": "555-1234",
+      "bio": {
+        "conditions": ["child sexual abuse", "domestic violence", "sexual assault"]
+      }
+    }
+  }
